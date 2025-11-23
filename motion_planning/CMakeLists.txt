@@ -32,13 +32,17 @@ include_directories(include)
 add_executable(pd_motion_planner_node src/pd_motion_planner_node.cpp)
 ament_target_dependencies(pd_motion_planner_node rclcpp geometry_msgs nav_msgs tf2_ros tf2_geometry_msgs)
 
+add_executable(pure_pursuit_motion_planner_node src/pure_pursuit_motion_planner_node.cpp)
+ament_target_dependencies(pure_pursuit_motion_planner_node rclcpp geometry_msgs nav_msgs tf2_ros tf2_geometry_msgs)
+
 install(
   DIRECTORY include
   DESTINATION include
 )
 
 install(TARGETS
-  pd_motion_planner_node 
+  pd_motion_planner_node
+  pure_pursuit_motion_planner_node 
   DESTINATION lib/${PROJECT_NAME}
 )
 
