@@ -14,21 +14,42 @@ find_package(geometry_msgs REQUIRED)
 find_package(nav_msgs REQUIRED)
 find_package(tf2_ros REQUIRED)
 find_package(tf2_geometry_msgs REQUIRED)
+find_package(nav2_core REQUIRED)
+find_package(nav2_costmap_2d REQUIRED)
+find_package(nav2_util REQUIRED)
+find_package(pluginlib REQUIRED)
+find_package(angles REQUIRED)
 
-if(BUILD_TESTING)
-  find_package(ament_lint_auto REQUIRED)
-  # the following line skips the linter which checks for copyrights
-  # comment the line when a copyright and license is added to all source files
-  set(ament_cmake_copyright_FOUND TRUE)
-  # the following line skips cpplint (only works in a git repo)
-  # comment the line when this package is in a git repo and when
-  # a copyright and license is added to all source files
-  set(ament_cmake_cpplint_FOUND TRUE)
-  ament_lint_auto_find_test_dependencies()
-endif()
-
+# 1. Include directories BEFORE creating the library targets
 include_directories(include)
 
+add_library(vfh_controller_plugin SHARED
+  src/vfh_controller.cpp
+)
+
+target_link_libraries(vfh_controller_plugin
+  ${rclcpp_LIBRARIES}
+  ${nav2_core_LIBRARIES}
+  ${nav2_costmap_2d_LIBRARIES}
+  ${nav2_util_LIBRARIES}
+  ${pluginlib_LIBRARIES}
+  ${geometry_msgs_LIBRARIES}
+  ${nav_msgs_LIBRARIES}
+  ${tf2_ros_LIBRARIES}
+  ${angles_LIBRARIES}
+)
+
+# 2. CRITICAL: Uncomment this! 
+# This macro registers the plugin XML with the ament index so ROS can find it.
+pluginlib_export_plugin_description_file(nav2_core vfh_controller_plugin.xml)
+
+install(TARGETS vfh_controller_plugin
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+  RUNTIME DESTINATION bin
+)
+
+# Nodes (Optional, keeping your existing nodes)
 add_executable(pd_motion_planner_node src/pd_motion_planner_node.cpp)
 ament_target_dependencies(pd_motion_planner_node rclcpp geometry_msgs nav_msgs tf2_ros tf2_geometry_msgs)
 
@@ -40,10 +61,23 @@ install(
   DESTINATION include
 )
 
+# 3. Installing the XML manually is fine, but the macro above is safer.
+install(FILES vfh_controller_plugin.xml
+  DESTINATION share/${PROJECT_NAME}
+)
+
 install(TARGETS
   pd_motion_planner_node
   pure_pursuit_motion_planner_node 
   DESTINATION lib/${PROJECT_NAME}
 )
 
+ament_export_include_directories(include)
+ament_export_libraries(vfh_controller_plugin)
+ament_export_dependencies(
+  nav2_core
+  rclcpp
+  geometry_msgs
+  nav2_costmap_2d
+)
 ament_package()

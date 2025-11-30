@@ -1,0 +1,7 @@
+<library path="vfh_controller_plugin">
+  <class name="motion_planning::VFHController" type="motion_planning::VFHController" base_class_type="nav2_core::Controller">
+    <description>
+      A VFH local planner implementation for Nav2.
+    </description>
+  </class>
+</library>
