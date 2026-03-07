@@ -49,12 +49,6 @@ install(TARGETS vfh_controller_plugin
   RUNTIME DESTINATION bin
 )
 
-# Nodes (Optional, keeping your existing nodes)
-add_executable(pd_motion_planner_node src/pd_motion_planner_node.cpp)
-ament_target_dependencies(pd_motion_planner_node rclcpp geometry_msgs nav_msgs tf2_ros tf2_geometry_msgs)
-
-add_executable(pure_pursuit_motion_planner_node src/pure_pursuit_motion_planner_node.cpp)
-ament_target_dependencies(pure_pursuit_motion_planner_node rclcpp geometry_msgs nav_msgs tf2_ros tf2_geometry_msgs)
 
 install(
   DIRECTORY include
@@ -64,12 +58,6 @@ install(
 # 3. Installing the XML manually is fine, but the macro above is safer.
 install(FILES vfh_controller_plugin.xml
   DESTINATION share/${PROJECT_NAME}
-)
-
-install(TARGETS
-  pd_motion_planner_node
-  pure_pursuit_motion_planner_node 
-  DESTINATION lib/${PROJECT_NAME}
 )
 
 ament_export_include_directories(include)
