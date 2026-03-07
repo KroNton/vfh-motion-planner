@@ -135,7 +135,3 @@ The plugin implements the `nav2_core::Controller` interface:
 | `setPlan()` | Receives the global path from the planner |
 | `computeVelocityCommands()` | Main loop — builds histogram, selects valley, outputs `TwistStamped` |
 | `setSpeedLimit()` | Dynamically adjusts max linear velocity (absolute or percentage) |
-
-## License
-
-TODO
